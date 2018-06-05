@@ -47,6 +47,39 @@ app.post('/shopping-list', jsonParser, (req, res) => {
   res.status(201).json(item);
 });
 
+app.post('/recipes', jsonParser, (req, res) => {
+  // could be used for messages in 2 places.
+  let message = '';
+  // ensure `name` and `ingredients` are in request body
+  const requiredFields = ['name', 'ingredients'];
+  for (let i=0; i<requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      message = `Missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+    if (i == 1) {
+      // ingredients must be an array.
+      if (typeof req.body.ingredients !== 'object') {
+        message = 'Ingredients must be an array';
+        console.error(message);
+        return res.status(400).send(message);
+      }
+      // ensure there is at least one ingredient
+      else if (req.body.ingredients.length === 0) {
+        message = 'Please add at least one ingredient';
+        console.error(message);
+        return res.status(400).send(message);
+      }
+      // overkill would be to add another search that there are no keys
+      // but not needed now
+    }
+  }
+
+  const item = Recipes.create(req.body.name, req.body.ingredients);
+  res.status(201).json(item);
+});
 
 app.get('/recipes', (req, res) => {
   res.json(Recipes.get());

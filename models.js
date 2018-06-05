@@ -54,6 +54,13 @@ function createShoppingList() {
 }
 
 const Recipes = {
+
+  /**
+   * Create a recipe
+   * @param string name
+   * @param array ingredients
+   * @return {{name: *, id: *, ingredients: *}}
+   */
   create: function(name, ingredients) {
     console.log('Creating a new recipe');
     const item = {
